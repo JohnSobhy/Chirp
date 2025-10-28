@@ -2,30 +2,11 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.convention.android.application)
-    alias(libs.plugins.compose.multiplatform)
-    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.convention.cmp.application)
     alias(libs.plugins.compose.hot.reload)
 }
 
 kotlin {
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
-
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-        }
-    }
-
     jvm()
 
     sourceSets {
@@ -66,11 +47,6 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
         }
     }
-}
-
-
-dependencies {  //apply to whole module not a specific sourceSet
-    debugImplementation(compose.uiTooling)
 }
 
 compose.desktop {
