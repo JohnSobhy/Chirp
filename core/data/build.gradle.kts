@@ -16,10 +16,6 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 // Add KMP dependencies here
-
-
-
-
                 //modules structure
                 implementation(projects.core.domain)
             }

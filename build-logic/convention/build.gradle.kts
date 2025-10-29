@@ -13,6 +13,7 @@ dependencies {
     compileOnly(libs.android.tools.common)
     compileOnly(libs.compose.gradlePlugin)
     compileOnly(libs.ksp.gradlePlugin)
+    compileOnly(libs.androidx.room.gradle.plugin)
     implementation(libs.buildkonfig.gradlePlugin)
     implementation(libs.buildkonfig.compiler)
 }
@@ -67,6 +68,10 @@ gradlePlugin {
          register("buildKonfig") {
             id = "com.john_halaka.convention.buildkonfig"
             implementationClass = "BuildKonfigConventionPlugin"
+        }
+        register("room") {
+            id = "com.john_halaka.convention.room"
+            implementationClass = "RoomConventionPlugin"
         }
 
     }
