@@ -18,15 +18,17 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import chirp.composeapp.generated.resources.Res
 import chirp.composeapp.generated.resources.compose_multiplatform
+import com.john_halaka.designsystem.theme.ChirpTheme
+import com.john_halaka.designsystem.theme.extended
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
+    ChirpTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
+                .background(MaterialTheme.colorScheme.extended.cakeRed)
                 .safeContentPadding()
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
