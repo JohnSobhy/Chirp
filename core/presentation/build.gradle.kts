@@ -19,6 +19,7 @@ kotlin {
                 //modules structure
                 implementation(projects.core.domain)
                 implementation(compose.components.resources)
+                implementation(libs.material3.adaptive)
             }
         }
 
