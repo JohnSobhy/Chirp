@@ -19,8 +19,8 @@ import io.ktor.client.statement.HttpResponse
 
 suspend inline fun <reified Request, reified Response : Any> HttpClient.post(
     route: String,
-    queryParams: Map<String, Any> = emptyMap(),
     body: Request,
+    queryParams: Map<String, Any> = emptyMap(),
     crossinline builder: HttpRequestBuilder.() -> Unit = {}
 ): Result<Response, DataError.Remote> {
     return safeCall {

@@ -13,6 +13,9 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+
+            //koin for android specific
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             //modules structure

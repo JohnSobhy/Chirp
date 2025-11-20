@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -109,7 +110,10 @@ fun ChirpButton(
         colors = colors,
         border = border
     ) {
-        Box(contentAlignment = Alignment.Center) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.padding(6.dp)
+        ) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .size(15.dp)
@@ -143,9 +147,9 @@ fun ChirpButton(
 @Preview
 @Composable
 fun ChirpPrimaryButtonPreview() {
-    ChirpTheme (
+    ChirpTheme(
         darkTheme = true
-    ){
+    ) {
         ChirpButton(
             text = "Hello Primary!",
             onClick = {}
@@ -156,9 +160,9 @@ fun ChirpPrimaryButtonPreview() {
 @Preview
 @Composable
 fun ChirpSecondaryButtonPreview() {
-    ChirpTheme (
+    ChirpTheme(
         darkTheme = true
-    ){
+    ) {
         ChirpButton(
             text = "Hello Secondary!",
             onClick = {},
@@ -171,9 +175,9 @@ fun ChirpSecondaryButtonPreview() {
 @Preview
 @Composable
 fun ChirpDestructivePrimaryButtonPreview() {
-    ChirpTheme (
+    ChirpTheme(
         darkTheme = true
-    ){
+    ) {
         ChirpButton(
             text = "Hello DestructivePrimary!",
             onClick = {},
@@ -186,9 +190,9 @@ fun ChirpDestructivePrimaryButtonPreview() {
 @Preview
 @Composable
 fun ChirpDestructiveSecondaryButtonPreview() {
-    ChirpTheme (
+    ChirpTheme(
         darkTheme = true
-    ){
+    ) {
         ChirpButton(
             text = "Hello DestructiveSecondary!",
             onClick = {},
@@ -201,9 +205,9 @@ fun ChirpDestructiveSecondaryButtonPreview() {
 @Preview
 @Composable
 fun ChirpTextButtonPreview() {
-    ChirpTheme (
+    ChirpTheme(
         darkTheme = true
-    ){
+    ) {
         ChirpButton(
             text = "Hello Text!",
             onClick = {},
