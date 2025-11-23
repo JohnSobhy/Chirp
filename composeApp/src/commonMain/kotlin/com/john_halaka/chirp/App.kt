@@ -1,18 +1,14 @@
 package com.john_halaka.chirp
 
-import androidx.compose.runtime.*
-import org.jetbrains.compose.ui.tooling.preview.Preview
-
-import com.john_halaka.auth.presentation.register.RegisterRoot
+import androidx.compose.runtime.Composable
+import com.john_halaka.chirp.navigation.NavigationRoot
 import com.john_halaka.designsystem.theme.ChirpTheme
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
 fun App() {
     ChirpTheme {
-        RegisterRoot(
-            onRegisterSuccess = {},
-            onLoginClick = {}
-        )
+        NavigationRoot()
     }
 }

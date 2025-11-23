@@ -1,0 +1,114 @@
+package com.john_halaka.auth.presentation.register_success
+
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import chirp.feature.auth.presentation.generated.resources.Res
+import chirp.feature.auth.presentation.generated.resources.account_successfully_created
+import chirp.feature.auth.presentation.generated.resources.login
+import chirp.feature.auth.presentation.generated.resources.resend_verification_email
+import chirp.feature.auth.presentation.generated.resources.resend_verification_email_success
+import chirp.feature.auth.presentation.generated.resources.verification_email_sent_to_x
+import com.john_halaka.core.presentation.util.ObserveAsEvents
+import com.john_halaka.designsystem.components.brand.ChirpSuccessIcon
+import com.john_halaka.designsystem.components.buttons.ChirpButton
+import com.john_halaka.designsystem.components.buttons.ChirpButtonStyle
+import com.john_halaka.designsystem.components.layouts.ChirpAdaptiveResultLayout
+import com.john_halaka.designsystem.components.layouts.ChirpSimpleResultLayout
+import com.john_halaka.designsystem.components.layouts.ChirpSnackbarScaffold
+import com.john_halaka.designsystem.theme.ChirpTheme
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
+
+@Composable
+fun RegisterSuccessRoot(
+    viewModel: RegisterSuccessViewModel = koinViewModel()
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    ObserveAsEvents(
+        flow = viewModel.events,
+        onEvent = { event ->
+            when (event) {
+                is RegisterSuccessEvent.ResendVerificationEmailSuccess -> {
+                    snackbarHostState.showSnackbar(
+                        message = getString(Res.string.resend_verification_email_success)
+                    )
+                }
+            }
+        }
+    )
+
+    RegisterSuccessScreen(
+        state = state,
+        onAction = viewModel::onAction,
+        snackbarHostState = snackbarHostState
+    )
+}
+
+@Composable
+fun RegisterSuccessScreen(
+    state: RegisterSuccessState,
+    onAction: (RegisterSuccessAction) -> Unit,
+    snackbarHostState: SnackbarHostState
+) {
+    ChirpSnackbarScaffold(
+        snackbarHostState = snackbarHostState
+    ) {
+        ChirpAdaptiveResultLayout {
+            ChirpSimpleResultLayout(
+                title = stringResource(Res.string.account_successfully_created),
+                description = stringResource(
+                    Res.string.verification_email_sent_to_x,
+                    state.registeredEmail
+                ),
+                icon = {
+                    ChirpSuccessIcon()
+                },
+                primaryButton = {
+                    ChirpButton(
+                        text = stringResource(Res.string.login),
+                        onClick = {
+                            onAction(RegisterSuccessAction.OnLoginClick)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                },
+                secondaryButton = {
+                    ChirpButton(
+                        text = stringResource(Res.string.resend_verification_email),
+                        onClick = {
+                            onAction(RegisterSuccessAction.OnResendVerificationEmailClick)
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !state.isResendingVerificationEmail,
+                        isLoading = state.isResendingVerificationEmail,
+                        style = ChirpButtonStyle.SECONDARY
+                    )
+                },
+                secondaryError = state.resendVerificationError?.asString()
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun Preview() {
+    ChirpTheme {
+        RegisterSuccessScreen(
+            state = RegisterSuccessState(
+                registeredEmail = "Test@Preview.com"
+            ),
+            onAction = {},
+            snackbarHostState = remember { SnackbarHostState() }
+        )
+    }
+}

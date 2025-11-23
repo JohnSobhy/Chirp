@@ -18,12 +18,13 @@ import com.john_halaka.designsystem.theme.extended
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ChirpSimpleSuccessLayout(
+fun ChirpSimpleResultLayout(
     title: String,
     description: String,
     icon: @Composable () -> Unit,
     primaryButton: @Composable () -> Unit,
     secondaryButton: @Composable (() -> Unit)? = null,
+    secondaryError: String? = null,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -60,10 +61,20 @@ fun ChirpSimpleSuccessLayout(
             primaryButton()
 
             if (secondaryButton != null) {
-                Spacer(
-                    modifier = Modifier.height(8.dp)
-                )
+                Spacer(modifier = Modifier.height(8.dp))
                 secondaryButton()
+
+                if (secondaryError != null) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = secondaryError,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
             }
             Spacer(
                 modifier = Modifier.height(8.dp)
