@@ -1,4 +1,4 @@
-package com.plcoding.auth.presentation.email_verification
+package com.john_halaka.auth.presentation.email_verification
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,9 +25,6 @@ import chirp.feature.auth.presentation.generated.resources.email_verified_succes
 import chirp.feature.auth.presentation.generated.resources.email_verified_successfully_desc
 import chirp.feature.auth.presentation.generated.resources.login
 import chirp.feature.auth.presentation.generated.resources.verifying_account
-import com.john_halaka.auth.presentation.email_verification.EmailVerificationAction
-import com.john_halaka.auth.presentation.email_verification.EmailVerificationState
-import com.john_halaka.auth.presentation.email_verification.EmailVerificationViewModel
 import com.john_halaka.designsystem.components.brand.ChirpFailureIcon
 import com.john_halaka.designsystem.components.brand.ChirpSuccessIcon
 import com.john_halaka.designsystem.components.buttons.ChirpButton
@@ -42,13 +39,22 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun EmailVerificationRoot(
-    viewModel: EmailVerificationViewModel = koinViewModel()
+    viewModel: EmailVerificationViewModel = koinViewModel(),
+    onLoginClick: () -> Unit,
+    onCloseClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     EmailVerificationScreen(
         state = state,
-        onAction = viewModel::onAction
+        onAction ={ action ->
+            when (action){
+                EmailVerificationAction.OnLoginClick -> onLoginClick()
+                EmailVerificationAction.OnCloseClick -> onCloseClick()
+            }
+            viewModel.onAction(action)
+
+        }
     )
 }
 

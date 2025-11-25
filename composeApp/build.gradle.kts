@@ -15,6 +15,7 @@ kotlin {
 
             //koin for android specific
             implementation(libs.koin.android)
+            implementation(libs.core.splashscreen)
         }
         commonMain.dependencies {
             //modules structure
