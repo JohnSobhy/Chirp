@@ -21,6 +21,8 @@ kotlin {
                 implementation(libs.bundles.ktor.common)
                 implementation(libs.touchlab.kermit)
                 implementation(libs.koin.core)
+                implementation(libs.datastore.preferences)
+                implementation(libs.datastore)
             }
         }
 
@@ -28,6 +30,7 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(libs.ktor.client.okhttp)
+                implementation(libs.koin.android)
             }
         }
 

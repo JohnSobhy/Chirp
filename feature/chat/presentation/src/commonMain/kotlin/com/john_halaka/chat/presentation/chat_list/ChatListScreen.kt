@@ -3,8 +3,6 @@ package com.john_halaka.chat.presentation.chat_list
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.john_halaka.designsystem.theme.ChirpTheme
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -27,13 +25,3 @@ fun ChatListScreen(
 
 }
 
-@Preview
-@Composable
-private fun Preview() {
-    ChirpTheme {
-        ChatListScreen(
-            state = ChatListState(),
-            onAction = {}
-        )
-    }
-}
