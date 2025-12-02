@@ -3,22 +3,33 @@ package com.john_halaka.chirp.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.john_halaka.auth.presentation.navigation.AuthGraphRoutes
 import com.john_halaka.auth.presentation.navigation.authGraph
+import com.john_halaka.chat.presentation.chat_list.ChatListRoot
+import com.john_halaka.chat.presentation.chat_list.ChatListRoute
 
 @Composable
 fun NavigationRoot(
-    navController: NavHostController
+    navController: NavHostController,
+    startDestination: Any
 ) {
     NavHost(
         navController = navController,
-        startDestination = AuthGraphRoutes.Graph
+        startDestination = startDestination
     ) {
         authGraph(
             navController = navController,
             onLoginSuccess = {
-
+                navController.navigate(ChatListRoute) {
+                    popUpTo(AuthGraphRoutes.Graph) {
+                        inclusive = true
+                    }
+                }
             }
         )
+        composable<ChatListRoute> {
+            ChatListRoot()
+        }
     }
 }
