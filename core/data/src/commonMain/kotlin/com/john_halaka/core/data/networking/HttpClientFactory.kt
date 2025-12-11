@@ -84,7 +84,6 @@ class HttpClientFactory(
                         if (response.request.url.encodedPath.contains("auth/")) {
                             return@refreshTokens null
                         }
-
                         // if preferences are empty we set it at null in sessionStorage and return
                         val authInfo = sessionStorage.observeAuthInfo().firstOrNull()
                         if (authInfo?.refreshToken.isNullOrBlank()) {
@@ -113,9 +112,7 @@ class HttpClientFactory(
                             // here means the refresh token expired (after 30 days or something) that means the user should re-login in order to get a new token
                             sessionStorage.set(null)
                         }
-
                         bearerTokens
-
                     }
                 }
             }

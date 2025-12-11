@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.john_halaka.core.presentation.util.DeviceConfiguration
+import com.john_halaka.core.presentation.util.clearFocusOnTap
 import com.john_halaka.core.presentation.util.currentDeviceConfiguration
 import com.john_halaka.designsystem.components.brand.ChirpBrandLogo
 import com.john_halaka.designsystem.theme.ChirpTheme
@@ -52,6 +53,7 @@ fun ChirpAdaptiveFormLayout(
         DeviceConfiguration.MOBILE_PORTRAIT -> {
             ChirpSurface(
                 modifier = modifier
+                    .clearFocusOnTap()
                     .consumeWindowInsets(WindowInsets.navigationBars)    //the space taken by navigation bar at the bottom
                     .consumeWindowInsets(WindowInsets.displayCutout),    //the space for the camera and notch
                 header = {

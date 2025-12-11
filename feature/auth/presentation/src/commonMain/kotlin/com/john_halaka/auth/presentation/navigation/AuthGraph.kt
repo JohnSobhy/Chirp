@@ -6,9 +6,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navDeepLink
 import com.john_halaka.auth.presentation.email_verification.EmailVerificationRoot
+import com.john_halaka.auth.presentation.forgot_password.ForgotPasswordRoot
 import com.john_halaka.auth.presentation.login.LoginRoot
 import com.john_halaka.auth.presentation.register.RegisterRoot
 import com.john_halaka.auth.presentation.register_success.RegisterSuccessRoot
+import com.john_halaka.auth.presentation.reset_password.ResetPasswordRoot
 
 fun NavGraphBuilder.authGraph(
     navController: NavController,
@@ -26,8 +28,10 @@ fun NavGraphBuilder.authGraph(
                 },
                 onCreateAccountClick = {
                     navController.navigate(AuthGraphRoutes.Register) {
-                        launchSingleTop = true   //if there is an instance of this screen in the backstack we show it
-                        restoreState = true      //when navigate back to Register we restore the state if it is saved
+                        launchSingleTop =
+                            true   //if there is an instance of this screen in the backstack we show it
+                        restoreState =
+                            true      //when navigate back to Register we restore the state if it is saved
                     }
                 }
             )
@@ -44,8 +48,10 @@ fun NavGraphBuilder.authGraph(
                             inclusive = true
                             saveState = true    //save the state of our current screen (register)
                         }
-                        launchSingleTop = true   //if there is an instance of this screen in the backstack we show it
-                        restoreState = true      //when navigate back to Login after a while we restore the state if saved
+                        launchSingleTop =
+                            true   //if there is an instance of this screen in the backstack we show it
+                        restoreState =
+                            true      //when navigate back to Login after a while we restore the state if saved
                     }
                 }
             )
@@ -93,7 +99,22 @@ fun NavGraphBuilder.authGraph(
                 }
             )
         }
-
-
+        composable<AuthGraphRoutes.ForgotPassword> {
+            ForgotPasswordRoot()
+        }
+        composable<AuthGraphRoutes.ResetPassword>(
+            deepLinks = listOf(
+                navDeepLink {
+                    this.uriPattern =
+                        "https://chirp.pl-coding.com/api/auth/reset-password?token={token}"
+                },
+                navDeepLink {
+                    this.uriPattern =
+                        "chirp://chirp.pl-coding.com/api/auth/reset-password?token={token}"
+                },
+            )
+        ) {
+            ResetPasswordRoot()
+        }
     }
 }
