@@ -6,14 +6,13 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.john_halaka.auth.presentation.navigation.AuthGraphRoutes
-import com.john_halaka.chat.presentation.chat_list.ChatListRoute
+import com.john_halaka.chat.presentation.navigation.ChatGraphRoutes
 import com.john_halaka.chirp.navigation.DeepLinkListener
 import com.john_halaka.chirp.navigation.NavigationRoot
 import com.john_halaka.core.presentation.util.ObserveAsEvents
 import com.john_halaka.designsystem.theme.ChirpTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-
 
 
 @Composable
@@ -50,7 +49,7 @@ fun App(
             NavigationRoot(
                 navController = navController,
                 startDestination = if(state.isLoggedIn) {
-                    ChatListRoute
+                    ChatGraphRoutes.Graph
                 } else {
                     AuthGraphRoutes.Graph
                 }
