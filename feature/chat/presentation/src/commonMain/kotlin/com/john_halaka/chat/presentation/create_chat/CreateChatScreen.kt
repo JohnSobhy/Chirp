@@ -21,11 +21,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.cancel
 import chirp.feature.chat.presentation.generated.resources.create_chat
+import com.john_halaka.chat.domain.models.Chat
 import com.john_halaka.chat.presentation.components.ChatParticipantSearchTextSection
 import com.john_halaka.chat.presentation.components.ChatParticipantsSelectionSection
 import com.john_halaka.chat.presentation.components.ManageChatButtonSection
 import com.john_halaka.chat.presentation.components.ManageChatHeaderRow
 import com.john_halaka.core.presentation.util.DeviceConfiguration
+import com.john_halaka.core.presentation.util.ObserveAsEvents
 import com.john_halaka.core.presentation.util.clearFocusOnTap
 import com.john_halaka.core.presentation.util.currentDeviceConfiguration
 import com.john_halaka.designsystem.components.brand.ChirpHorizontalDivider
@@ -40,9 +42,15 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun CreateChatRoot(
     onDismiss: () -> Unit,
+    onChatCreated : (Chat) -> Unit,
     viewModel: CreateChatViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is CreateChatEvent.OnChatCreated -> onChatCreated(event.chat)
+        }
+    }
     ChirpAdaptiveDialogSheetLayout(
         onDismiss = onDismiss
     ) {
@@ -109,6 +117,7 @@ fun CreateChatScreen(
                 isTextFieldFocused = it
             }
         )
+
         ChirpHorizontalDivider()
         ChatParticipantsSelectionSection(
             selectedParticipants = state.selectedChatParticipants,
@@ -137,6 +146,7 @@ fun CreateChatScreen(
                     style = ChirpButtonStyle.SECONDARY
                 )
             },
+            error = state.createChatError?.asString(),
             modifier = Modifier.fillMaxWidth()
         )
     }

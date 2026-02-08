@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.error_participant_not_found
 import com.john_halaka.chat.domain.chat.ChatParticipantService
+import com.john_halaka.chat.domain.chat.ChatService
 import com.john_halaka.chat.presentation.mappers.toChatParticipantUi
 import com.john_halaka.core.domain.util.DataError
 import com.john_halaka.core.domain.util.onFailure
@@ -30,7 +31,8 @@ import kotlin.time.Duration.Companion.seconds
 
 @OptIn(FlowPreview::class)
 class CreateChatViewModel(
-    private val chatParticipantService: ChatParticipantService
+    private val chatParticipantService: ChatParticipantService,
+    private val chatService: ChatService
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -61,8 +63,43 @@ class CreateChatViewModel(
     fun onAction(action: CreateChatAction) {
         when (action) {
             CreateChatAction.OnAddClick -> addParticipant()
-            CreateChatAction.OnCreateChatClick -> {}
+            CreateChatAction.OnCreateChatClick -> createChat()
             CreateChatAction.OnDismissDialog -> Unit
+        }
+    }
+
+    private fun createChat() {
+        val userIds = state.value.selectedChatParticipants.map { it.id }
+        if (userIds.isEmpty()) return
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isCreatingChat = true,
+                    canAddParticipant = false
+                )
+            }
+            chatService
+                .createChat(
+                    otherUserIds = userIds
+                )
+                .onSuccess { chat ->
+                    _state.update {
+                        it.copy(
+                            isCreatingChat = false,
+                            createChatError = null
+                        )
+                    }
+                    eventChannel.send(CreateChatEvent.OnChatCreated(chat))
+                }
+                .onFailure { error ->
+                    _state.update {
+                        it.copy(
+                            isCreatingChat = false,
+                            canAddParticipant = it.currentSearchResult != null && !it.isSearching,
+                            createChatError = error.toUiText()
+                        )
+                    }
+                }
         }
     }
 
