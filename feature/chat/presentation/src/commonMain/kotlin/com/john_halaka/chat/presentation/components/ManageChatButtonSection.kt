@@ -39,7 +39,7 @@ fun ManageChatButtonSection(
             visible = error != null
         ) {
             Spacer(Modifier.height(16.dp))
-            error?.let { it ->
+            error?.let {
                 Text(
                     text = it,
                     textAlign = TextAlign.End,
