@@ -36,8 +36,10 @@ actual suspend fun <T> platformSafeCall(
     }
     catch (e: ClientRequestException) {
         currentCoroutineContext().ensureActive()
+        println("inside catch block of platformSafeCall error is ${e}")
         Result.Failure(DataError.Remote.SERVICE_UNAVAILABLE)
-    }catch (e: Exception){
+    }
+    catch (e: Exception){
         currentCoroutineContext().ensureActive()
         Result.Failure(DataError.Remote.UNKNOWN)
     }

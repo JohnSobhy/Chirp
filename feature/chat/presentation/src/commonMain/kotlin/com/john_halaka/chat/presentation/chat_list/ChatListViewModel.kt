@@ -1,40 +1,11 @@
 package com.john_halaka.chat.presentation.chat_list
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
+import com.john_halaka.core.domain.auth.SessionStorage
 
 
-class ChatListViewModel : ViewModel() {
-
-    private var hasLoadedInitialData = false
-
-    private val eventChannel = Channel<ChatListEvent>()
-    val events = eventChannel.receiveAsFlow()
-
-    private val _state = MutableStateFlow(ChatListState())
-    val state = _state
-        .onStart {
-            if (!hasLoadedInitialData) {
-                /** Load initial data here **/
-                hasLoadedInitialData = true
-            }
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000L),
-            initialValue = ChatListState()
-        )
-
-    fun onAction(action: ChatListAction) {
-        when (action) {
-            else -> TODO("Handle actions")
-        }
-    }
+class ChatListViewModel(
+    private val sessionStorage: SessionStorage
+) : ViewModel() {
 
 }
