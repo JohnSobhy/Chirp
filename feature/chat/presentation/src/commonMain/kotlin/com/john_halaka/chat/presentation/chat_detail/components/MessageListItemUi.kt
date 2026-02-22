@@ -24,31 +24,39 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun MessageListItemUi(
     messageUi: MessageUi,
-    onMessageLongClick: () -> Unit,
+    onMessageLongClick: (MessageUi.LocalUserMessage) -> Unit,
     onDismissMessageMenu: () -> Unit,
-    onDeleteClick: () -> Unit,
-    onRetryClick: () -> Unit,
+    onDeleteClick: (MessageUi.LocalUserMessage) -> Unit,
+    onRetryClick: (MessageUi.LocalUserMessage) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
     ) {
-        when(messageUi) {
+        when (messageUi) {
             is MessageUi.DateSeparator -> {
                 DateSeparatorUi(
                     date = messageUi.date.asString(),
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+
             is MessageUi.LocalUserMessage -> {
                 LocalUserMessage(
                     message = messageUi,
-                    onMessageLongClick = onMessageLongClick,
+                    onMessageLongClick = {
+                        onMessageLongClick(messageUi)
+                    },
                     onDismissMessageMenu = onDismissMessageMenu,
-                    onDeleteClick = onDeleteClick,
-                    onRetryClick = onRetryClick
+                    onDeleteClick = {
+                        onDeleteClick(messageUi)
+                    },
+                    onRetryClick = {
+                        onRetryClick(messageUi)
+                    }
                 )
             }
+
             is MessageUi.OtherUserMessage -> {
                 OtherUserMessage(
                     message = messageUi

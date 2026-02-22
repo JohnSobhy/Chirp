@@ -25,16 +25,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import chirp.feature.chat.presentation.generated.resources.Res
 import chirp.feature.chat.presentation.generated.resources.cancel
 import chirp.feature.chat.presentation.generated.resources.create_chat
 import chirp.feature.chat.presentation.generated.resources.do_you_want_to_logout
 import chirp.feature.chat.presentation.generated.resources.do_you_want_to_logout_desc
 import chirp.feature.chat.presentation.generated.resources.logout
+import chirp.feature.chat.presentation.generated.resources.no_chats
+import chirp.feature.chat.presentation.generated.resources.no_chats_subtitle
 import com.john_halaka.chat.presentation.chat_list.components.ChatListHeader
 import com.john_halaka.chat.presentation.chat_list.components.ChatListItemUi
-import com.john_halaka.chat.presentation.chat_list.components.EmptyChatSection
+import com.john_halaka.chat.presentation.components.EmptyListSection
 import com.john_halaka.chat.presentation.model.ChatUi
 import com.john_halaka.designsystem.components.brand.ChirpHorizontalDivider
 import com.john_halaka.designsystem.components.buttons.ChirpFloatingActionButton
@@ -128,7 +129,9 @@ fun ChatListScreen(
                     )
                 }
                 state.chats.isEmpty() -> {
-                    EmptyChatSection(
+                    EmptyListSection(
+                        title = stringResource(Res.string.no_chats),
+                        description = stringResource(Res.string.no_chats_subtitle),
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxWidth()
