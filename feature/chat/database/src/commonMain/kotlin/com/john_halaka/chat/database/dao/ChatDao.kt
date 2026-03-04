@@ -6,6 +6,7 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import com.john_halaka.chat.database.enities.ChatEntity
 import com.john_halaka.chat.database.enities.ChatInfoEntity
+import com.john_halaka.chat.database.enities.ChatParticipantCrossRef
 import com.john_halaka.chat.database.enities.ChatParticipantEntity
 import com.john_halaka.chat.database.enities.ChatWithParticipants
 import kotlinx.coroutines.flow.Flow
@@ -14,16 +15,16 @@ import kotlinx.coroutines.flow.Flow
 interface ChatDao {
 
     @Upsert
-    suspend fun upsertChat( chat: ChatEntity)
+    suspend fun upsertChat(chat: ChatEntity)
 
     @Upsert
-    suspend fun upsertChats( chats: List<ChatEntity>)
+    suspend fun upsertChats(chats: List<ChatEntity>)
 
     @Query("DELETE FROM ChatEntity WHERE chatId = :chatId")
     suspend fun deleteChatById(chatId: String)
 
     @Transaction    //When defining the function block yourself make it a db transaction
-    suspend fun deleteChatsByIds(chatIds: List<String>){
+    suspend fun deleteChatsByIds(chatIds: List<String>) {
         chatIds.forEach { chatId ->
             deleteChatById(chatId)
         }
@@ -41,19 +42,75 @@ interface ChatDao {
     suspend fun deleteAllChats()
 
     @Query("SELECT chatId FROM ChatEntity")
-    suspend fun getAllChatIds() : List<String>
+    suspend fun getAllChatIds(): List<String>
 
     @Query("SELECT COUNT(*) FROM ChatEntity")
     fun getChatCount(): Flow<Int>
 
-    @Query("""
+    @Query(
+        """
     SELECT p.* FROM ChatParticipantEntity p 
     JOIN ChatParticipantCrossRef cpcr ON p.userId = cpcr.userId
     WHERE cpcr.chatId = :chatId AND cpcr.isActive = true
     ORDER BY p.username
-        """)
+        """
+    )
     fun getActiveParticipantByChatId(chatId: String): Flow<List<ChatParticipantEntity>>
 
     @Query("SELECT * FROM ChatEntity WHERE chatId = :chatId")
     fun getChatInfoById(chatId: String): Flow<ChatInfoEntity?>
+
+    @Transaction
+    suspend fun upsertChatWithParticipantsAndCrossRefs(
+        chat: ChatEntity,
+        participants: List<ChatParticipantEntity>,
+        participantDao: ChatParticipantDao,
+        crossRefDao: ChatParticipantCrossRefDao
+    ) {
+        upsertChat(chat)
+        participantDao.upsertParticipants(participants)
+
+        val crossRefs = participants.map { participant ->
+            ChatParticipantCrossRef(
+                chatId = chat.chatId,
+                userId = participant.userId,
+                isActive = true
+            )
+        }
+        crossRefDao.upsertCrossRefs(crossRefs)
+        crossRefDao.syncChatParticipants(
+            chatId = chat.chatId,
+            participants = participants
+        )
+    }
+
+    @Transaction
+    suspend fun upsertChatsWithParticipantsAndCrossRefs(
+        chats: List<ChatWithParticipants>,
+        participantDao: ChatParticipantDao,
+        crossRefDao: ChatParticipantCrossRefDao
+    ) {
+        upsertChats(chats.map { it.chat })
+
+        val allParticipants = chats.flatMap { it.participants }
+        participantDao.upsertParticipants(allParticipants)
+
+        val allCrossRefs = chats.flatMap { chatWithParticipants ->
+            chatWithParticipants.participants.map { participant ->
+                ChatParticipantCrossRef(
+                    chatId = chatWithParticipants.chat.chatId,
+                    userId = participant.userId,
+                    isActive = true
+                )
+            }
+        }
+        crossRefDao.upsertCrossRefs(allCrossRefs)
+
+        chats.forEach { (chat, participants) ->
+            crossRefDao.syncChatParticipants(
+                chatId = chat.chatId,
+                participants = participants
+            )
+        }
+    }
 }
