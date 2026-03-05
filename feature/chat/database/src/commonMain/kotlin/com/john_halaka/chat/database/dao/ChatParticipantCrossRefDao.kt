@@ -16,7 +16,7 @@ interface ChatParticipantCrossRefDao {
     @Query("SELECT userId FROM ChatParticipantCrossRef WHERE chatId = :chatId")
     suspend fun getActiveParticipantIdsByChat(chatId: String): List<String>
 
-    @Query("SELECT userId FROM ChatParticipantCrossRef")
+    @Query("SELECT userId FROM ChatParticipantCrossRef WHERE chatId = :chatId")
     suspend fun getAllParticipantIdsByChat(chatId: String): List<String>
 
     @Query(

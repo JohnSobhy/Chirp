@@ -5,6 +5,7 @@ import com.john_halaka.chat.data.dto.request.CreateChatRequest
 import com.john_halaka.chat.data.mappers.toChat
 import com.john_halaka.chat.domain.chat.ChatService
 import com.john_halaka.chat.domain.models.Chat
+import com.john_halaka.core.data.networking.get
 import com.john_halaka.core.data.networking.post
 import com.john_halaka.core.domain.util.DataError
 import com.john_halaka.core.domain.util.Result
@@ -20,6 +21,16 @@ class KtorChatService(
             body = CreateChatRequest(otherUserIds)
         ).map { chatDto ->
             chatDto.toChat()
+        }
+    }
+
+    override suspend fun getChats(): Result<List<Chat>, DataError.Remote> {
+        return httpClient.get<List<ChatDto>>(
+            route = "/chat"
+        ).map { chatDtos ->
+            chatDtos.map { chatDto ->
+                chatDto.toChat()
+            }
         }
     }
 }

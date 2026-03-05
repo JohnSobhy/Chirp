@@ -2,6 +2,7 @@ package com.john_halaka.chat.database.enities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 
 
 @Entity(
@@ -22,6 +23,10 @@ import androidx.room.ForeignKey
             childColumns = ["userId"],
             onDelete = ForeignKey.CASCADE
         ),
+    ],
+    indices = [
+        Index(value = ["chatId"]),
+        Index(value = ["userId"]),
     ]
 ) // this setup is for many to many relations as a single user can have multiple chats and a single chat can have multiple users
 // deleting any of the 2 will result in deleting the instance of this cross ref entity, as if the chat or the user is no longer in the db, we can't have them related to another table

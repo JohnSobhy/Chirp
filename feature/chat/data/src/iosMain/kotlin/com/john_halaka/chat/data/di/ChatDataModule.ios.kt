@@ -1,0 +1,8 @@
+package com.john_halaka.chat.data.di
+
+import com.john_halaka.chat.database.DatabaseFactory
+import org.koin.dsl.module
+
+actual val platformChatDataModule = module {
+    single { DatabaseFactory() }
+}

@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.SpanStyle
@@ -25,20 +23,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import chirp.feature.chat.presentation.generated.resources.Res
-import chirp.feature.chat.presentation.generated.resources.group_chat
-import chirp.feature.chat.presentation.generated.resources.you
 import com.john_halaka.chat.domain.models.ChatMessage
+import com.john_halaka.chat.domain.models.ChatMessageDeliveryStatus
 import com.john_halaka.chat.presentation.components.ChatItemHeaderRow
 import com.john_halaka.chat.presentation.model.ChatUi
 import com.john_halaka.designsystem.components.avatar.ChatParticipantUi
-import com.john_halaka.designsystem.components.avatar.ChirpStackedAvatars
 import com.john_halaka.designsystem.theme.ChirpTheme
 import com.john_halaka.designsystem.theme.extended
-import com.john_halaka.designsystem.theme.titleXSmall
-import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.time.Clock
+
 @Composable
 fun ChatListItemUi(
     chat: ChatUi,
@@ -79,7 +73,7 @@ fun ChatListItemUi(
                             color = MaterialTheme.colorScheme.extended.textSecondary,
                         )
                     ) {
-                        append(chat.lastMessageSenderUsername + ":")
+                        append(chat.lastMessageSenderUsername + ": ")
                     }
                     append(chat.lastMessage.content)
                 }
@@ -135,7 +129,8 @@ fun ChatListItemUiPreview() {
                     content = "This is a last chat message that was sent by Philipp " +
                             "and goes over multiple lines to showcase the ellipsis",
                     createdAt = Clock.System.now(),
-                    senderId = "1"
+                    senderId = "1",
+                    deliveryStatus = ChatMessageDeliveryStatus.SENDING
                 ),
                 lastMessageSenderUsername = "Philipp"
             )

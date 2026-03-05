@@ -1,6 +1,7 @@
 package com.john_halaka.chat.presentation.mappers
 
 import com.john_halaka.chat.domain.models.ChatParticipant
+import com.john_halaka.core.domain.auth.User
 import com.john_halaka.designsystem.components.avatar.ChatParticipantUi
 
 fun ChatParticipant.toChatParticipantUi(): ChatParticipantUi {
@@ -9,5 +10,14 @@ fun ChatParticipant.toChatParticipantUi(): ChatParticipantUi {
         username = username,
         imageUrl = profilePictureUrl,
         initials = initials
+    )
+}
+
+fun User.toChatParticipantUi(): ChatParticipantUi {
+    return ChatParticipantUi(
+        id = id,
+        username = username,
+        initials = username.take(2).uppercase(),
+        imageUrl = profilePictureUrl
     )
 }
