@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalUuidApi::class, ExperimentalComposeUiApi::class)
+
 package com.john_halaka.chat.presentation.chat_detail
 
 import androidx.compose.animation.AnimatedVisibility
@@ -25,11 +27,10 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
-
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.john_halaka.chat.domain.models.ChatMessage
 import com.john_halaka.chat.domain.models.ChatMessageDeliveryStatus
 import com.john_halaka.chat.presentation.chat_detail.components.ChatDetailHeader
@@ -44,22 +45,23 @@ import com.john_halaka.core.presentation.util.currentDeviceConfiguration
 import com.john_halaka.designsystem.components.avatar.ChatParticipantUi
 import com.john_halaka.designsystem.theme.ChirpTheme
 import com.john_halaka.designsystem.theme.extended
+
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 import kotlin.time.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ChatDetailRoot(
-     chatId: String?,
+    chatId: String?,
     isDetailPresent: Boolean,
     onBack: () -> Unit,
-    viewModel: ChatDetailViewModel = viewModel()
+    viewModel: ChatDetailViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-     LaunchedEffect(chatId) {
+    LaunchedEffect(chatId) {
         viewModel.onAction(ChatDetailAction.OnSelectChat(chatId))
     }
 
@@ -171,6 +173,10 @@ fun ChatDetailScreen(
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .padding(
+                                    vertical = 8.dp,
+                                    horizontal = 16.dp
+                                )
                         )
                     }
                 }
@@ -182,16 +188,21 @@ fun ChatDetailScreen(
                 AnimatedVisibility(
                     visible = configuration.isWideScreen && state.chatUi != null
                 ) {
-                    MessageBox(
-                        messageTextFieldState = state.messageTextFieldState,
-                        isTextInputEnabled = state.canSendMessage,
-                        connectionState = state.connectionState,
-                        onSendClick = {
-                            onAction(ChatDetailAction.OnSendMessageClick)
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
+                    DynamicRoundedCornerColumn(
+                        isCornersRounded = configuration.isWideScreen
+                    ) {
+                        MessageBox(
+                            messageTextFieldState = state.messageTextFieldState,
+                            isTextInputEnabled = state.canSendMessage,
+                            connectionState = state.connectionState,
+                            onSendClick = {
+                                onAction(ChatDetailAction.OnSendMessageClick)
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                        )
+                    }
                 }
             }
         }
@@ -207,12 +218,13 @@ private fun DynamicRoundedCornerColumn(
     Column(
         modifier = modifier
             .shadow(
-                elevation = if (isCornersRounded) 4.dp else 0.dp,
-                shape = if (isCornersRounded) RoundedCornerShape(16.dp) else RectangleShape
+                elevation = if (isCornersRounded) 8.dp else 0.dp,
+                shape = if (isCornersRounded) RoundedCornerShape(24.dp) else RectangleShape,
+                spotColor = Color.Black.copy(alpha = 0.2f)
             )
             .background(
                 color = MaterialTheme.colorScheme.surface,
-                shape = if (isCornersRounded) RoundedCornerShape(16.dp) else RectangleShape
+                shape = if (isCornersRounded) RoundedCornerShape(24.dp) else RectangleShape
             )
     ) {
         content()
@@ -231,7 +243,6 @@ private fun ChatDetailEmptyPreview() {
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
 @Preview
 @Composable
 private fun ChatDetailMessagesPreview() {
@@ -273,7 +284,7 @@ private fun ChatDetailMessagesPreview() {
                     lastMessageSenderUsername = "Philipp"
                 ),
                 messages = (1..20).map {
-                    if(it % 2 == 0) {
+                    if (it % 2 == 0) {
                         MessageUi.LocalUserMessage(
                             id = Uuid.random().toString(),
                             content = "Hello world!",
