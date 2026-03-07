@@ -5,10 +5,13 @@ import com.john_halaka.chat.data.dto.request.CreateChatRequest
 import com.john_halaka.chat.data.mappers.toChat
 import com.john_halaka.chat.domain.chat.ChatService
 import com.john_halaka.chat.domain.models.Chat
+import com.john_halaka.core.data.networking.delete
 import com.john_halaka.core.data.networking.get
 import com.john_halaka.core.data.networking.post
 import com.john_halaka.core.domain.util.DataError
+import com.john_halaka.core.domain.util.EmptyResult
 import com.john_halaka.core.domain.util.Result
+import com.john_halaka.core.domain.util.asEmptyResult
 import com.john_halaka.core.domain.util.map
 import io.ktor.client.HttpClient
 
@@ -37,10 +40,15 @@ class KtorChatService(
     override suspend fun getChatById(chatId: String): Result<Chat, DataError.Remote> {
         return httpClient.get<ChatDto>(
             route = "/chat/$chatId"
-            ).map { chatDto ->
+        ).map { chatDto ->
             chatDto.toChat()
         }
 
     }
 
+    override suspend fun leaveChat(chatId: String): EmptyResult<DataError.Remote> {
+        return httpClient.delete<Unit>(
+            route = "/chat/$chatId/leave"
+        ).asEmptyResult()
+    }
 }

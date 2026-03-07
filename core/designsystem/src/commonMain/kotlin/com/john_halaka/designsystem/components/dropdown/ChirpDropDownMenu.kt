@@ -49,14 +49,14 @@ fun ChirpDropDownMenu(
                         )
                         Text(
                             text = item.title,
-                            color = MaterialTheme.colorScheme.extended.textSecondary,
+                            color = item.contentColor,
                             fontWeight = FontWeight.Medium
                         )
                     }
                 },
                 onClick = item.onClick
             )
-            if(index != items.lastIndex) {
+            if (index != items.lastIndex) {
                 ChirpHorizontalDivider()
             }
         }
